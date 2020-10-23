@@ -1,4 +1,4 @@
-const movies = [
+export const movies = [
 
     {
 

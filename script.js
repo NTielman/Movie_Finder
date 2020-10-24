@@ -3,11 +3,6 @@ import { movies } from "./database.js";
 const getRadioInput = document.querySelectorAll('input[type="radio"]');
 const textInput = document.querySelector('input[type="search"]');
 const getSearchBtn = document.querySelector('.footer__search_button');
-const filmTitles = movies.map(item => item.Title);
-const newFilms = movies.filter(item => item.Year >= 2014);
-// const superPounds = superheroes.filter(hero => hero.weight == 200).map(hero => hero.name);
-// const heroesOfDC = superheroes.filter(hero => hero.publisher === 'DC Comics');
-// const weightOfDC = superheroes.filter(hero => hero.publisher === 'DC Comics').filter(hero => hero.weight !== 'unknown').map(hero => parseFloat(hero.weight));
 
 //----------------------function declarations-------------------
 //displays list of available films 
@@ -15,11 +10,18 @@ const printFilmList = function (filmArray) {
 
     if (filmArray) {
         //if success 
+        // insert image poster and link to imdb
         const filmList = document.getElementById('filtered_movies__list');
         filmArray.forEach(item => {
             const newFilmItem = document.createElement("li");
+            const imdbLink = document.createElement("a");
+            imdbLink.setAttribute("href", `https://www.imdb.com/title/${item.imdbID}/`);
+            imdbLink.setAttribute("target", "_blank");
+            const filmPoster = document.createElement("img");
+            filmPoster.src = item.Poster;
+            imdbLink.appendChild(filmPoster);
             newFilmItem.classList.add('filtered_movies__item');
-            newFilmItem.textContent = item.Title;
+            newFilmItem.appendChild(imdbLink);
             filmList.appendChild(newFilmItem);
         })
     } else {
@@ -49,46 +51,26 @@ const removeAll = function () {
     }
 }
 
-// returns filmarray by filterword
-const filterByWord = function (filterWord) {
-    const newArray = movies.filter(item => item.Title.includes(filterWord));
-    return newArray;
-}
-
 const filter = function (filterWord) {
-    switch (filterWord) {
-        case 'new':
-            return movies.filter(item => item.Year >= 2014);
-        case 'avenger':
-            filterWord = 'Avengers';
-            return filterByWord(filterWord);
-        case 'batman':
-            filterWord = 'Batman';
-            return filterByWord(filterWord);
-        case 'xmen':
-            filterWord = 'X-Men';
-            return filterByWord(filterWord);
-        case 'princess':
-            filterWord = 'Princess';
-            return filterByWord(filterWord);
-        default:
-            return false;
-    }
+    let newA = [];
 
-    // if (array.some(element => element.Title === filterword || movies.filter(item => item.Title.toLowercase.includes(filterword)))) {
-    // newArray = movies.filter(filterword);
-    // return newArray
-    // if array item.Title.includes(filterword) || filterword.toLowercase 
-    //     console.log(array.map(element => element * 2));
-    // } else {
-    //
-    // }
+    if (movies.some(item => item.Title.toLowerCase().includes(filterWord))) {
+        newA = movies.filter(item => item.Title.toLowerCase().includes(filterWord));
+        return newA;
+    } else if (filterWord == 'new') {
+        return movies.filter(item => item.Year >= 2014);
+    } else if (filterWord === 'xmen') { // without -
+        return movies.filter(item => item.Title.includes('X-Men'));
+    } else { // if word not found
+        return false;
+    }
 }
 
 printFilmList(movies);
 
 const updateFilmList = function (filterWord) {
     removeAll();
+    filterWord = filterWord.toLowerCase();
     printFilmList(filter(filterWord));
 }
 

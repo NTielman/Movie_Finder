@@ -1,12 +1,9 @@
+/* -------------------------universal styling------------------------ */
 * {
     padding: 0px;
     margin: 0px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-}
-
-html {
-    height: 100vh;
 }
 
 body {
@@ -17,36 +14,32 @@ body {
     height: 100%;
 }
 
-/* header styling */
+/* ----------------------------- header ----------------------------- */
+nav,
 .header {
     width: 100%;
-    text-align: center;
     padding: 20px;
 }
 
 .header h1 {
+    text-align: center;
     font-size: 40px;
 }
 
-/* navigation menu styling */
+/* ----------------------------- nav menu --------------------------- */
 nav {
-    width: 100%;
-    padding: 20px;
     height: 80px;
-    
 }
 
 nav ul {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-evenly;
-    
 }
 
 nav ul li {
     list-style: none;
     display: inline-block;
-    padding: 10px;
     font-size: 16px;
 }
 
@@ -55,14 +48,14 @@ input[type="radio"] {
     cursor: pointer;
 }
 
-/* main film list styling */
+/* -------------------------- main movie-list ----------------------- */
 main {
     width: 100%;
     padding: 5px 80px;
     min-height: 600px;
 }
 
-.filtered_movies {
+.movie-list {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -72,14 +65,14 @@ main {
     font-size: 30px;
 }
 
-#filtered_movies__list {
+#movie-list__filtered {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-content: space-around;
 }
 
-#filtered_movies__list li{
+#movie-list__filtered li {
     list-style: none;
     display: inline-block;
     margin: 5px;
@@ -89,7 +82,7 @@ img {
     width: 250px;
 }
 
-/* footer search bar styling */
+/* -------------------------footer search-bar------------------------ */
 .footer {
     width: 100%;
     display: flex;
@@ -97,7 +90,7 @@ img {
     padding: 20px;
 }
 
-.footer__search_bar {
+.footer__search-bar {
     width: 300px;
     height: 35px;
     padding: 10px;
@@ -105,16 +98,16 @@ img {
     border-radius: 5px 0px 0px 5px;
 }
 
-.footer__search_button:focus,
-.footer__search_bar:focus {
-    outline: none;
-}
-
-.footer__search_button {
+.footer__search-button {
     background-color: darkorange;
     width: 50px;
     height: 35px;
     cursor: pointer;
     border: none;
     border-radius: 0px 5px 5px 0px;
+}
+
+.footer__search-button:focus,
+.footer__search-bar:focus {
+    outline: none;
 }

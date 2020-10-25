@@ -1,95 +1,101 @@
-//------------global variable declarations----------------------
+//---------------------------- global variable declarations ------------------------------
 import { movies } from "./database.js";
 const getRadioInput = document.querySelectorAll('input[type="radio"]');
-const textInput = document.querySelector('input[type="search"]');
-const getSearchBtn = document.querySelector('.footer__search_button');
+const getSearchInput = document.querySelector('input[type="search"]');
+const getSearchBtn = document.querySelector('.footer__search-button');
 
-//----------------------function declarations-------------------
-//displays list of available films 
-const printFilmList = function (filmArray) {
+//-------------------------------- function declarations ---------------------------------
+//filters movie database based on filterword
+const filterMovies = function (keyWord) {
+    let filteredArray = [];
 
-    if (filmArray) {
-        //if success 
-        // insert image poster and link to imdb
-        const filmList = document.getElementById('filtered_movies__list');
-        filmArray.forEach(item => {
-            const newFilmItem = document.createElement("li");
-            const imdbLink = document.createElement("a");
-            imdbLink.setAttribute("href", `https://www.imdb.com/title/${item.imdbID}/`);
-            imdbLink.setAttribute("target", "_blank");
-            const filmPoster = document.createElement("img");
-            filmPoster.src = item.Poster;
-            imdbLink.appendChild(filmPoster);
-            newFilmItem.classList.add('filtered_movies__item');
-            newFilmItem.appendChild(imdbLink);
-            filmList.appendChild(newFilmItem);
-        })
-    } else {
-        //if fail
-        const main = document.querySelector('.filtered_movies');
-        const printMessage = document.createElement("p");
-        printMessage.textContent = "no search results found";
-        main.appendChild(printMessage);
-    }
-
-}
-
-//clears the screen
-const removeAll = function () {
-    const parent1 = document.querySelector('.filtered_movies');
-    const child1 = document.querySelector('p');
-
-    const parent = document.getElementById('filtered_movies__list');
-    const child = document.getElementsByClassName('filtered_movies__item');
-
-    for (let i = 0; child.length > 0; i++) {
-        parent.removeChild(child[0]);
-    }
-
-    if (child1) {
-        parent1.removeChild(child1);
-    }
-}
-
-const filter = function (filterWord) {
-    let newA = [];
-
-    if (movies.some(item => item.Title.toLowerCase().includes(filterWord))) {
-        newA = movies.filter(item => item.Title.toLowerCase().includes(filterWord));
-        return newA;
-    } else if (filterWord == 'new') {
-        return movies.filter(item => item.Year >= 2014);
-    } else if (filterWord === 'xmen') { // without -
-        return movies.filter(item => item.Title.includes('X-Men'));
-    } else { // if word not found
+    // if movie-list contains titles that match keyword
+    if (movies.some(item => item.Title.toLowerCase().includes(keyWord))) {
+        filteredArray = movies.filter(item => item.Title.toLowerCase().includes(keyWord));
+        return filteredArray;
+    } else if (keyWord == 'new') { // if filtered for newest movies
+        filteredArray = movies.filter(item => item.Year >= 2014);
+        return filteredArray;
+    } else { // if keyword not found
         return false;
     }
 }
 
-printFilmList(movies);
+//displays list of available films
+const printMovieList = function (filmArray) {
 
-const updateFilmList = function (filterWord) {
-    removeAll();
-    filterWord = filterWord.toLowerCase();
-    printFilmList(filter(filterWord));
+    //if filterted movie-list exists
+    if (filmArray) {
+        const movieList = document.getElementById('movie-list__filtered');
+        filmArray.forEach(item => {
+            //create dynamic items
+            const movieItem = document.createElement("li");
+            const imdbLink = document.createElement("a");
+            const moviePoster = document.createElement("img");
+
+            //set attributes
+            moviePoster.src = item.Poster;
+            imdbLink.setAttribute("href", `https://www.imdb.com/title/${item.imdbID}/`);
+            imdbLink.setAttribute("target", "_blank");
+            movieItem.classList.add('movie-list__item');
+
+            //add items to DOM
+            imdbLink.appendChild(moviePoster);
+            movieItem.appendChild(imdbLink);
+            movieList.appendChild(movieItem);
+        })
+    } else { //if no results found
+        const getMain = document.querySelector('.movie-list');
+        const printErrorMsg = document.createElement("p");
+        printErrorMsg.textContent = "no search results found";
+        getMain.appendChild(printErrorMsg);
+    }
 }
 
-// --------------------eventlisteners -----------------------
+//removes previous search-results from screen
+const clearScreen = function () {
+    const getMovieList = document.getElementById('movie-list__filtered');
+    const getMovieItems = document.getElementsByClassName('movie-list__item');
+    const getMain = document.querySelector('.movie-list');
+    const getErrorMsg = document.querySelector('p');
+
+    // if screen contains error msg
+    if (getErrorMsg) {
+        getMain.removeChild(getErrorMsg);
+    } else { // if screen contains films  
+
+        for (let i = 0; getMovieItems.length > 0; i++) {
+            getMovieList.removeChild(getMovieItems[0]);
+        }
+    }
+}
+
+//updates the search results based on eventlisteners
+const updateResults = function (filterWord) {
+    clearScreen();
+    filterWord = filterWord.toLowerCase();
+    printMovieList(filterMovies(filterWord));
+}
+
+//------------------------------------ eventlisteners ------------------------------------
 getRadioInput.forEach(item => {
     item.addEventListener('change', event => {
         const userChoice = event.target.value;
-        updateFilmList(userChoice);
+        updateResults(userChoice);
     })
 });
 
-textInput.addEventListener('keypress', (event) => {
-    const userChoice = textInput.value;
+getSearchInput.addEventListener('keypress', (event) => {
+    const userChoice = getSearchInput.value;
     if (event.keyCode === 13) {
-        updateFilmList(userChoice);
+        updateResults(userChoice);
     }
 });
 
 getSearchBtn.addEventListener('click', () => {
-    const userChoice = textInput.value;
-    updateFilmList(userChoice);
-}); 
+    const userChoice = getSearchInput.value;
+    updateResults(userChoice);
+});
+
+//----------------------------- print initial movie list ---------------------------------
+printMovieList(movies);

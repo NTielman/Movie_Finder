@@ -22,7 +22,7 @@ const filterMovies = function (keyWord) {
 }
 
 //displays list of available films
-const printMovieList = function (filmArray) {
+const displayMovieList = function (filmArray) {
 
     //if filterted movie-list exists
     if (filmArray) {
@@ -74,7 +74,7 @@ const clearScreen = function () {
 const updateResults = function (filterWord) {
     clearScreen();
     filterWord = filterWord.toLowerCase();
-    printMovieList(filterMovies(filterWord));
+    displayMovieList(filterMovies(filterWord));
 }
 
 //------------------------------------ eventlisteners ------------------------------------
@@ -97,5 +97,7 @@ getSearchBtn.addEventListener('click', () => {
     updateResults(userChoice);
 });
 
-//----------------------------- print initial movie list ---------------------------------
-printMovieList(movies);
+//----------------------------- display initial movie list ---------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    displayMovieList(movies);
+});
